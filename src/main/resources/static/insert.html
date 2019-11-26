@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Insert</title>
+    <style>
+      input[type='number']::-webkit-inner-spin-button,
+      input[type='number']::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      #result-container {
+        display: none;
+      }
+
+      #fields {
+        display: flex;
+        flex-direction: column;
+        width: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      <a href="./index.html">&laquo; Back</a>
+    </p>
+
+    <div id="fields">
+      <label for="input-id">ID:</label>
+      <input type="number" autocomplete="off" name="id" id="input-id" />
+
+      <label for="input-name">Name:</label>
+      <input autocomplete="off" name="name" id="input-name" />
+
+      <label for="input-surname">Surname:</label>
+      <input autocomplete="off" name="surname" id="input-surname" />
+
+      <button id="btn-insert">Insert</button>
+    </div>
+
+    <div id="result-container">
+      <h3>Successfully added:</h3>
+      <table id="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script>
+      const table = document.querySelector('#user-table');
+      const tbody = table.querySelector('tbody');
+      const fragment = document.createDocumentFragment();
+      const resultContainer = document.querySelector('#result-container');
+
+      const btnInsert = document.querySelector('#btn-insert');
+      btnInsert.onclick = () => {
+        const user = {};
+
+        document
+          .querySelectorAll('input')
+          .forEach(input => (user[input.name] = input.value));
+
+        fetch('https://thiss-rest-controllers.herokuapp.com/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(user),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error();
+            }
+            return response.json();
+          })
+          .then(result => {
+            const row = document.createElement('tr');
+
+            Object.values(result).forEach(v => {
+              const td = document.createElement('td');
+              const text = document.createTextNode(v);
+
+              td.appendChild(text);
+              row.appendChild(td);
+            });
+
+            fragment.appendChild(row);
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+
+            resultContainer.style.display = 'block';
+          })
+          .catch(() => {
+            resultContainer.style.display = 'none';
+          });
+      };
+    </script>
+  </body>
+</html>
