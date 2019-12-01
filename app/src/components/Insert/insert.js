@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import isEmpty from 'lodash.isempty';
+import { useStyles } from './styles';
 
 const Insert = () => {
   const [state, setState] = useState({
@@ -8,6 +9,8 @@ const Insert = () => {
     user: {},
     error: '',
   });
+
+  const classes = useStyles();
 
   const handleError = response => {
     if (!response.ok) {
@@ -55,13 +58,7 @@ const Insert = () => {
         <Link to={'/home'}>&laquo; Back</Link>
       </p>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          width: '400px',
-        }}
-      >
+      <div className={classes.fields}>
         <label htmlFor={'input-id'}>ID:</label>
         <input
           id={'input-id'}

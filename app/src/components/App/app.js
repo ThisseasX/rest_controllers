@@ -3,15 +3,20 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from '/components/Home';
 import Search from '/components/Search';
 import Insert from '/components/Insert';
+import { useStyles } from './styles';
 
-const App = () => (
-  <Router>
-    <Switch>
-      <Route exact path={'/search'} component={Search} />
-      <Route exact path={'/insert'} component={Insert} />
-      <Route component={Home} />
-    </Switch>
-  </Router>
-);
+const App = () => {
+  useStyles();
+
+  return (
+    <Router>
+      <Switch>
+        <Route exact path={'/search'} component={Search} />
+        <Route exact path={'/insert'} component={Insert} />
+        <Route component={Home} />
+      </Switch>
+    </Router>
+  );
+};
 
 export default App;
